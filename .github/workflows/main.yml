@@ -3,7 +3,7 @@ name: publish-to-git
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
