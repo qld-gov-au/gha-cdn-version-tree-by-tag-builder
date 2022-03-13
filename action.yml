@@ -1,0 +1,103 @@
+---
+name: cdn-version-tree-by-tag-builder
+description: |
+  Publish files to a git repository from a tag in semantic tree structure
+  i.e. tag v1.10.19 is submitted
+  1. split on first dot (this is major)
+  2. create folder using first part {major}
+  3. create folder '{major}.x.x-latest' inside said {major} folder and copy files (or delete and re-create)
+  4. split on second dot (this is minor)
+  6. inside {major folder} create folder '{minor}.x-latest' and copy files (or delete and re-create)
+  7. inside {major folder} create folder of exact tag nam'{tag} and copy files (or delete and re-create)
+
+  Structure would be:
+  v1
+  |- v1.x.x-latest
+  |- v1.10.x-latest
+  |- v1.10.19
+
+  And it should build a tree like so
+  |- v1
+  |- |- v1.x.x-latest
+  |- |- v1.10.x-latest
+  |- |- v1.10.19
+  |- |- v1.10.20
+  |- |- v1.11.x-latest
+  |- |- v1.11.1
+  |- |- v1.11.2
+  |- v2
+  |- |- v2.x.x-latest
+  |- |- v2.0.x-latest
+  |- |- v2.0.0
+  |- |- v2.0.1
+  |- |- v2.0.2
+
+branding:
+  icon: 'git-commit'
+  color: 'blue'
+inputs:
+  repository:
+    description: 'Destination repository (default: current repository)'
+    default: ''
+  branch:
+    description: 'Destination branch'
+    required: true
+  host:
+    description: 'Destination git host'
+    default: 'github.com'
+  github_token:
+    description: 'GitHub Token (use `secrets.GITHUB_TOKEN`)'
+    required: true
+  github_pat:
+    description: 'Personal Access Token or other https credentials'
+    default: ''
+  source_folder:
+    description: 'Source folder in workspace to copy (default: workspace root)'
+    default: ''
+  target_folder:
+    description: 'Target folder in destination branch to copy to (default: repository root)'
+    default: ''
+  commit_author:
+    description: 'User Name <email@address> (default: [github.actor]@users.noreply.github.com)'
+    default: ''
+  commit_message:
+    description: 'Commit message (default: [workflow] Publish from [repository]:[branch]/[folder])'
+    default: ''
+  dry_run:
+    description: 'Do not push to repository (set to non-empty string to make dry-run)'
+    default: ''
+  working_directory:
+    description: 'Working directory for clone (default: random location in `${HOME}`)'
+    default: ''
+  initial_source_folder:
+    description: 'Source folder in workspace to copy if branch didnt exist (default: source_folder value)'
+    default: ''
+  initial_commit_message:
+    description: 'Commit message if branch didnt exist'
+    default: 'Initial commit'
+  git_ref:
+    description: 'GitHub Reference ${ { github.ref } }'
+    required: true
+outputs:
+  commit_hash:
+    description: 'Hash of the new commit'
+  working_directory:
+    description: 'Working directory of temporary repository'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.repository }}
+    - ${{ inputs.branch }}
+    - ${{ inputs.host }}
+    - ${{ inputs.github_token }}
+    - ${{ inputs.github_pat }}
+    - ${{ inputs.source_folder }}
+    - ${{ inputs.target_folder }}
+    - ${{ inputs.commit_author }}
+    - ${{ inputs.commit_message }}
+    - ${{ inputs.dry_run }}
+    - ${{ inputs.working_directory }}
+    - ${{ inputs.initial_source_folder }}
+    - ${{ inputs.initial_commit_message }}
+    - ${{ inputs.git_ref }}
