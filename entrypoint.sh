@@ -50,7 +50,7 @@ fi
 IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG_VALUE"
 echo "Major: $MAJOR"
 echo "Minor: $MINOR"
-echo "Minor: $PATCH"
+echo "Patch: $PATCH"
 if [ -z "${PATCH}" ] ; then
   echo "tag is not in correct format"
   exit 0

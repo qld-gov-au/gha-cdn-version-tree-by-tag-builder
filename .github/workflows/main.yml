@@ -1,4 +1,4 @@
-name: publish-to-git
+name: cdn-version-tree-by-tag-builder tests
 
 on:
   push:
