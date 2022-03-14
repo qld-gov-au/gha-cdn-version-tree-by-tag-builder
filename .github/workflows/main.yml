@@ -16,7 +16,7 @@ jobs:
       - uses: ./
         id: publish
         with:
-          git_ref: '${{ github.ref }}'
+          git_ref: 'refs/tags/v1.0.20' #'${{ github.ref }}'
           branch: master
           github_token: '${{ secrets.GITHUB_TOKEN  }}'
           source_folder: .github
@@ -26,4 +26,30 @@ jobs:
         run: |
           test -n "${{ steps.publish.outputs.commit_hash }}"
           test -n "${{ steps.publish.outputs.working_directory }}"
-
+      - uses: ./
+        id: "skip_as_ref_is_not_tag"
+        with:
+          git_ref: '${{ github.ref }}'
+          branch: master
+          github_token: '${{ secrets.GITHUB_TOKEN  }}'
+          source_folder: .github
+          target_folder: test
+          dry_run: true
+      - uses: ./
+        id: "skip_as_cant_split_on_dot"
+        with:
+          git_ref: 'refs/tags/badTag' #'${{ github.ref }}'
+          branch: master
+          github_token: '${{ secrets.GITHUB_TOKEN  }}'
+          source_folder: .github
+          target_folder: test
+          dry_run: true
+      - uses: ./
+        id: "skip_as_cant_split_on_both_dots"
+        with:
+          git_ref: 'refs/tags/badTag.sdfs' #'${{ github.ref }}'
+          branch: master
+          github_token: '${{ secrets.GITHUB_TOKEN  }}'
+          source_folder: .github
+          target_folder: test
+          dry_run: true

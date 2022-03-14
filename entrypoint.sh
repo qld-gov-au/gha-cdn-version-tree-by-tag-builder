@@ -47,16 +47,13 @@ if [[ "$GITHUB_REF" == "${GITHUB_REF/refs\/tags\//}"  ]]; then
     exit 0
 fi
 
-IFS='.' read -r MAJOR MINOR <<< "$TAG_VALUE"
+IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG_VALUE"
 echo "Major: $MAJOR"
 echo "Minor: $MINOR"
-if [ -z "${MINOR}" ] ; then
+echo "Minor: $PATCH"
+if [ -z "${PATCH}" ] ; then
   echo "tag is not in correct format"
   exit 0
-fi
-if [[ "$TAG_VALUE" == "${MINOR}" ]] ; then
-  echo "tag is not in correct format"
-  #exit 0
 fi
 
 COMMIT_AUTHOR="${INPUT_COMMIT_AUTHOR:-${GITHUB_ACTOR} <${GITHUB_ACTOR}@users.noreply.github.com>}"
@@ -119,15 +116,6 @@ if [ "$(git ls-remote --heads "${REMOTE}" "${BRANCH}"  | wc -l)" == 0 ] ; then
     mkdir -p "${TARGET_PATH}/${MAJOR}/${MAJOR}.x.x-latest" || exit 1
     rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE_PATH}/" "${TARGET_PATH}/${MAJOR}/${MAJOR}.x.x-latest" || exit 1
 
-
-    #minor
-    mkdir -p "${TARGET_PATH}/${MAJOR}/${MINOR}.x-latest" || exit 1
-    rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE_PATH}/" "${TARGET_PATH}/${MAJOR}/${MINOR}.x-latest" || exit 1
-
-    #tag
-    mkdir -p "${TARGET_PATH}/${MAJOR}/${TAG_VALUE}"
-    rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE_PATH}/" "${TARGET_PATH}/${MAJOR}/${TAG_VALUE}" || exit 1
-
     echo "Creating initial commit"
     git add "${TARGET_PATH}" || exit 1
     git commit -m "${INITIAL_COMMIT_MESSAGE}" --author "${COMMIT_AUTHOR} <${COMMIT_AUTHOR}@users.noreply.github.com>" || exit 1
@@ -159,8 +147,8 @@ rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE
 
 
 #minor
-mkdir -p "${TARGET_PATH}/${MAJOR}/${MINOR}.x-latest" || exit 1
-rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE_PATH}/" "${TARGET_PATH}/${MAJOR}/${MINOR}.x-latest" || exit 1
+mkdir -p "${TARGET_PATH}/${MAJOR}/${MAJOR}.${MINOR}.x-latest" || exit 1
+rsync -a --quiet --delete --exclude ".git" --exclude ".github" "${INITIAL_SOURCE_PATH}/" "${TARGET_PATH}/${MAJOR}/${MAJOR}.${MINOR}.x-latest" || exit 1
 
 #tag
 mkdir -p "${TARGET_PATH}/${MAJOR}/${TAG_VALUE}"
