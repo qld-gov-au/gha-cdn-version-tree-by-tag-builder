@@ -46,6 +46,10 @@ if [[ "$GITHUB_REF" == "${GITHUB_REF/refs\/tags\//}"  ]]; then
     echo "Is not a tag, script exited"
     exit 0
 fi
+if [[ "$GITHUB_REF" == "${GITHUB_REF/refs\/pull\//}"  ]]; then
+    echo "Is not a tag, script exited"
+    exit 0
+fi
 
 IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG_VALUE"
 echo "Major: $MAJOR"
