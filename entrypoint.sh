@@ -46,7 +46,7 @@ if [[ "$GITHUB_REF" == "${GITHUB_REF/refs\/tags\//}"  ]]; then
     echo "Is not a tag, script exited"
     exit 0
 fi
-if [[ "$GITHUB_REF" == "${GITHUB_REF/refs\/pull\//}"  ]]; then
+if [[ "$GITHUB_REF" != "${GITHUB_REF/refs\/pull\//}"  ]]; then
     echo "Is not a tag, script exited"
     exit 0
 fi
