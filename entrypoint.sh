@@ -18,7 +18,7 @@ INPUT_INITIAL_SOURCE_FOLDER="${12}"
 INPUT_INITIAL_COMMIT_MESSAGE="${13}"
 GITHUB_REF="${14}"
 
-
+git config --global --add safe.directory /github/workspace
 
 # Check for required inputs.
 #
