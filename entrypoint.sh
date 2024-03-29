@@ -23,7 +23,7 @@ git config --global --add safe.directory /github/workspace
 # Check for required inputs.
 #
 [ -z "$INPUT_BRANCH" ] && echo >&2 "::error::'branch' is required" && exit 1
-[ -z "$INPUT_GITHUB_TOKEN" -a -z "$INPUT_GITHUB_PAT" ] && echo >&2 "::error::'github_token' or 'github_pat' is required" && exit 1
+[ -z "$INPUT_GITHUB_TOKEN" -a -z "$INPUT_GITHUB_PAT" ] && echo >&2 "::error::'github_token' or 'github_pat' is required" && exit 0
 
 # Set state from inputs or defaults.
 #
