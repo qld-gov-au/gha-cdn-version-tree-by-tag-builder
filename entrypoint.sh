@@ -176,16 +176,18 @@ git commit -m "${COMMIT_MESSAGE}" --author "${COMMIT_AUTHOR} <${COMMIT_AUTHOR}@u
 COMMIT_HASH="$(git rev-parse HEAD)"
 echo "Created commit ${COMMIT_HASH}"
 
+git tag $TAG_VALUE
 # Publish output variables.
 #
-echo "::set-output name=commit_hash::${COMMIT_HASH}"
-echo "::set-output name=working_directory::${WORK_DIR}"
+echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
+echo "working_directory=${WORK_DIR}" >> $GITHUB_OUTPUT
 
 # Push if not a dry-run.
 #
 if [ -z "${INPUT_DRYRUN}" ] ; then
     echo "Pushing to ${REMOTE}:${BRANCH}"
     git push origin "${BRANCH}" || exit 1
+    git push origin -f $TAG_VALUE
 else
     echo "[DRY-RUN] Not pushing to ${REMOTE}:${BRANCH}"
 fi
